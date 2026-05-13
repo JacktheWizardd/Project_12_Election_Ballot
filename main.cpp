@@ -1,25 +1,22 @@
 #include <iostream>
 #include <fstream>
+#include <sstream>
 
 class voter{
     public:
-        void read_from_file(const std::string& f){
-            std::ifstream file(f);
-            std::string line;
 
-            //get each line
-            while(getline(file, line)){
-
+        //check file is readbale
+        bool read_from_file(const std::string& filename){
+            std::ifstream file(filename);
+            //check if is open
+            if(!file.is_open()){
+                std::cout << "Error file is not open";
             }
-        }
+            return file.good();
+        } 
 
-        void check_voter_choices(std::string& x){
-            switch(x){
-                case A:
-                case a:
-                    
-            }
-        }
+        //check file's line readability
+        
 
     private:
         //variables
@@ -50,16 +47,10 @@ class voter{
         const int total{100};
 };
 
-int user_input(int& x){
-    using namespace std;
-    int x;
-    cout << "Enter an integer:" << endl;
-    cin >> x;
-    return x;
-}
-
-
 
 int main(){
+    voter test;
+    test.read_from_file("votes_small.txt");
+
     return 0;
 }
