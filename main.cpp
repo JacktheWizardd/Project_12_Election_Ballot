@@ -34,6 +34,10 @@ class voter{
                 if(check_file_line(file, line)){
                     while(getline(file, line)){
                         std::cout << line << std::endl;
+                        // FUTURE UPDATE: 
+                    // 1. Extract raw data from 'line'
+                    // 2. Without separating ID and Choice, store the pair into the vector
+                    // 3. Example: if "voter 1" is called, it returns both ID and Choice.
                     }
                 }
             }
