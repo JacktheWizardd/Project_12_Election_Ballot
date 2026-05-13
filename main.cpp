@@ -1,22 +1,44 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <vector>
 
 class voter{
     public:
 
         //check file is readbale
-        bool read_from_file(const std::string& filename){
-            std::ifstream file(filename);
+        bool check_file(const std::ifstream& filename){
             //check if is open
-            if(!file.is_open()){
-                std::cout << "Error file is not open";
+            if(!filename.is_open()){
+                std::cout << "Error can't read file";
+                return false;
             }
-            return file.good();
+            return true;
         } 
 
         //check file's line readability
+        bool check_file_line(std::ifstream& filename, std::string& line){
+            if(getline(filename, line)){
+                return true;
+            }
+            std::cout << "ERROR: cant read line" << std::endl;
+            return false;
+        } 
         
+        //get result from file
+        void process_file_results(const std::string& filename){
+            std::ifstream file(filename);
+            std::string line;
+
+            if(check_file(file)){
+                if(check_file_line(file, line)){
+                    while(getline(file, line)){
+                        std::cout << line << std::endl;
+                    }
+                }
+            }
+            return;
+        }
 
     private:
         //variables
@@ -49,8 +71,9 @@ class voter{
 
 
 int main(){
+    std::string typo_test = "votts_small.txt";
+    std::string main_file = "votes_small.txt";
     voter test;
-    test.read_from_file("votes_small.txt");
-
+    test.process_file_results(main_file);
     return 0;
 }
