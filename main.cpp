@@ -53,7 +53,7 @@ class voter{
         
         //Records a voter's ID and their selection into the tracking vector
         void save_vote(std::string& line){
-            voter.push_back(line);
+            voter_list.push_back(line);
         }
 
         //identity voter id
@@ -78,10 +78,76 @@ class voter{
         void print_voter_choices(std::string& voter_line){
             size_t line_length = voter_line.length();
             for(int i = 0; i < line_length; i++){
-                if(std::isalpha(voter_line[i])){
-                    std::cout << voter_line[i];
+                char l = voter_line[i];
+                if(std::isalpha(l)){
+                    std::cout << l;
+                    if(l >= 'A' && l <= 'C'){
+                        mayor_choice(l);
+                    } else if(l >= 'D' && l <= 'E'){
+                        proposition_17_result(l);
+                    } else if(l >= 'F' && l <= 'G'){
+                        measure_1_result(l);
+                    } else if(l >= 'H' && l <= 'I'){
+                        measure_2_result(l);
+                    }    
                 }
             }
+        }
+
+        
+
+        void mayor_choice(char& line){
+            if(line == 'A'){
+                vote_mayor_choice = "Pincher";
+            } else if(line == 'B'){
+                vote_mayor_choice = "Dover";
+            } else if(line == 'C'){
+                vote_mayor_choice = "Perman";
+            }else{
+                vote_mayor_choice = "Error no mayor found"; 
+            }
+        }
+
+        void proposition_17_result(char& line){
+            if (line == 'D'){
+                yes_no_prop_17 = "YES";
+            } else if (line == 'E'){
+                yes_no_prop_17 = "NO";
+            } else {
+                yes_no_prop_17 = "ERROR prop 17 failed to find letter";
+            }
+        }
+        void measure_1_result(char& line){
+            if (line == 'F'){
+                yes_no_measure_1 = "YES";
+            } else if (line == 'G'){
+                yes_no_measure_1 = "NO";
+            } else {
+                yes_no_measure_1 = "ERROR prop 17 failed to find letter";
+            }
+        }
+        void measure_2_result(char& line){
+            if (line == 'H'){
+                yes_no_measure_2 = "YES";
+            } else if (line == 'I'){
+                yes_no_measure_2 = "NO";
+            } else {
+                yes_no_measure_2 = "ERROR prop 17 failed to find letter";
+            }
+        }
+
+         //check voter info
+        void check_voter_info(const int& n){
+            std::string line = voter_list[n];
+            std::cout << "Voter ";
+            identify_voter_id(line);
+            std::cout << " voted: ";
+            print_voter_choices(line);
+            print_voter_picks();
+        }
+        
+        void print_voter_picks(){
+            std::cout << " (" << vote_mayor_choice << ", " << yes_no_prop_17 << " on PROP 17 " << ", " << yes_no_measure_1  << " on MEASURE 1" << ", " << yes_no_measure_2 << " on MEASURE 2)" << std::endl;
         }
 
         //count choices
@@ -91,42 +157,51 @@ class voter{
                 case 'A':
                 case 'a':
                     penny++;
+                    break;
                 case 'B':
                 case 'b':
                     skip++;
+                    break;
                 case 'C':
                 case 'c':
                     sue++;
+                    break;
 
                 //proposition 17
                 //yes
                 case 'D':
                 case 'd':
                     proposition_17_yes++;
+                    break;
                 //no
                 case 'E':
                 case 'e':
                     proposition_17_no++;
+                    break;
                 
                 //Measure 1
                 //yes
                 case 'F':
                 case 'f':
                     measure_1_yes++;
+                    break;
                 //no
                 case 'G':
                 case 'g':
                     measure_1_no++;
+                    break;
 
                 //Measure 2
                 //yes
                 case 'H':
                 case 'h':
                     measure_2_yes++;
+                    break;
                 //no
                 case 'I':
                 case 'i':
                     measure_2_no++;
+                    break;
                 
             }        
         }
@@ -157,17 +232,8 @@ class voter{
             cout << "   I. Yes              :" << int_to_percentage(measure_2_no, measure_2_total_count) << "%" << endl;
         }
 
-        //check voter info
-        void check_voter_info(const int& n){
-            std::string line = voter[n];
-            std::cout << "Voter ";
-            identify_voter_id(line);
-            std::cout << " voted: ";
-            print_voter_choices(line);
-            
-        }
 
-        int int_to_percentage(int& candidate, double& total){
+        double int_to_percentage(int& candidate, double& total){
             return (candidate / total) * 100;
         }
 
@@ -210,13 +276,19 @@ class voter{
             std:: cout <<measure_2_no << std::endl;
         }
         
+        void pick_voter(){
+            int user_input{0};
+            std::cout << "Enter a number: ";
+            std::cin >> user_input;
+            check_voter_info(user_input);
+        }
         
 
     private:
 
         //variables
         //vector
-        std::vector<std::string> voter;
+        std::vector<std::string> voter_list;
         
         // -- Mayors --
         int penny{0};              //Letter A
@@ -238,6 +310,12 @@ class voter{
         int measure_2_yes{0};      //letter H
         int measure_2_no{0};       //letter I
         double measure_2_total_count{0};   
+
+        //string variables
+        std::string vote_mayor_choice;
+        std::string yes_no_prop_17;
+        std::string yes_no_measure_1;
+        std::string yes_no_measure_2;
 };
 
 
@@ -245,8 +323,9 @@ int main(){
     //debug
     std::string typo_test = "votts_small.txt";
     std::string main_file = "votes_small.txt";
+    std::string large_file = "votes_large.txt";
     voter test;
-    test.process_file_results(main_file);
+    test.process_file_results(large_file);
     // test.debug_display_result();
     
     //calculate total votes
@@ -257,6 +336,8 @@ int main(){
 
     //display results
     test.display_result();
-    test.check_voter_info(2);
+    std::cout << std::endl;
+    test.pick_voter();
+    
     return 0;
 }
