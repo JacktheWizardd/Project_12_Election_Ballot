@@ -1,5 +1,6 @@
 #include <iostream>
 #include <fstream>
+#include <vector>
 
 std::vector<int> voter_ids;
 std::vector<std::string> voter_choices;

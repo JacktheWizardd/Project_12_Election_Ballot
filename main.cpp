@@ -6,11 +6,12 @@
 class voter{
     public:
 
+        // ------ debug ------
         //check file is readbale
         bool check_file(const std::ifstream& filename){
             //check if is open
             if(!filename.is_open()){
-                std::cout << "Error can't read file";
+                std::cout << "ERROR: can't read file";
                 return false;
             }
             return true;
@@ -25,31 +26,81 @@ class voter{
             return false;
         } 
         
-        //get result from file
-        void process_file_results(const std::string& filename){
+        //process file 
+        bool process_file_results(const std::string& filename){
             std::ifstream file(filename);
             std::string line;
 
             if(check_file(file)){
                 if(check_file_line(file, line)){
-                    while(getline(file, line)){
-                        std::cout << line << std::endl;
-                        // FUTURE UPDATE: 
-                    // 1. Extract raw data from 'line'
-                    // 2. Without separating ID and Choice, store the pair into the vector
-                    // 3. Example: if "voter 1" is called, it returns both ID and Choice.
-                    }
+                    read_each_line(file, line);
+                    return true;
                 }
             }
-            return;
+            std::cout << "ERROR: failed to read the file" << std::endl;
+            return false;
+        }
+
+        //read each line
+        void read_each_line(std::ifstream& file, std::string& line){
+            while(getline(file, line)){
+                save_vote(line);
+                identity_voter_choices(line);
+            }
+            //debug vector
+            // std::cout << voter[1] << std::endl;
+        }
+        
+        //Records a voter's ID and their selection into the tracking vector
+        void save_vote(std::string& line){
+            voter.push_back(line);
+        }
+
+        //identity voter id
+        
+        //identity voter choices;
+        void identity_voter_choices(std::string& voter_line){
+            size_t line_length = voter_line.length();
+            for(int i = 0; i < line_length; i++){
+                if(std::isalpha(voter_line[i])){
+                    count_choices(voter_line[i]);
+                }
+            }
+        }
+
+        //count choices
+        void count_choices(char& letter){
+            switch(letter){
+                //mayors
+                case 'A':
+                case 'a':
+                    penny++;
+                case 'B':
+                case 'b':
+                    skip++;
+                case 'C':
+                case 'c':
+                    sue++;
+
+                //proposition 17
+                //add the rest of the variables.
+            }
+            //debug 
+            
+        }
+        
+        //debug function - display variable result
+        void debug_display_result(){
+            std::cout << penny << std::endl;
+            std::cout << skip << std::endl;
+            std::cout << sue << std::endl;
         }
 
     private:
-        //variables
 
+        //variables
         //vector
-        std::vector<int> voter_ids;
-        std::vector<std::string> voter_choices;
+        std::vector<std::string> voter;
         
         // -- Mayors --
         int penny{0}; //Letter A
@@ -75,9 +126,11 @@ class voter{
 
 
 int main(){
+    //debug
     std::string typo_test = "votts_small.txt";
     std::string main_file = "votes_small.txt";
     voter test;
     test.process_file_results(main_file);
+    test.debug_display_result();
     return 0;
 }
