@@ -57,7 +57,7 @@ class voter{
         }
 
         //identity voter id
-        void identif_voter_id(std::string& voter_line){
+        void identify_voter_id(std::string& voter_line){
             size_t line_length = voter_line.length();
             for(int i = 0; i < line_length; i++){
                 if(std::isdigit(voter_line[i])){
@@ -72,6 +72,14 @@ class voter{
             for(int i = 0; i < line_length; i++){
                 if(std::isalpha(voter_line[i])){
                     count_choices(voter_line[i]);
+                }
+            }
+        }
+        void print_voter_choices(std::string& voter_line){
+            size_t line_length = voter_line.length();
+            for(int i = 0; i < line_length; i++){
+                if(std::isalpha(voter_line[i])){
+                    std::cout << voter_line[i];
                 }
             }
         }
@@ -150,7 +158,14 @@ class voter{
         }
 
         //check voter info
-        
+        void check_voter_info(const int& n){
+            std::string line = voter[n];
+            std::cout << "Voter ";
+            identify_voter_id(line);
+            std::cout << " voted: ";
+            print_voter_choices(line);
+            
+        }
 
         int int_to_percentage(int& candidate, double& total){
             return (candidate / total) * 100;
@@ -194,6 +209,8 @@ class voter{
             std:: cout <<measure_2_yes << std::endl;
             std:: cout <<measure_2_no << std::endl;
         }
+        
+        
 
     private:
 
@@ -240,5 +257,6 @@ int main(){
 
     //display results
     test.display_result();
+    test.check_voter_info(2);
     return 0;
 }
